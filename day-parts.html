@@ -1,85 +1,113 @@
-<html>
+<html lang="ru">
 <style>
-.block, .pre-block, .post-block {
-    display: inline-block;
-}
-.block {
-    border: 1px solid #999;
-    width: 30px;
-    height: 30px;
-    text-align: center;
-}
-.past {
-    background-color: #333;
-    /*opacity: .7;*/
-}
-.past:after {
-    content: "🗨️";
-    /*content: "⭕";*/
-    /*content: "❌";*/
-}
-.now {
-    background-color: orange;
-}
-.now:after {
-    content: "🔥";
-}
-.future {
-    background-color: green;
-}
-.future:after {
-    content: "🔥";
-}
+    .container {
+        background-color: #333;
+        color: white;
+        display: inline-block;
+    }
 
-.ht:hover .tooltip {
-  display:block;
-}
+    .block, .pre-block, .post-block {
+        display: inline-block;
+        font-size: 40px;
+        line-height: 50px;
+        vertical-align: text-bottom;
+    }
 
-.tooltip {
-  display: none;
-  color: gray;
-  margin-left: 0px;
-  margin-top: 32px;
-  position: absolute;
-}
+    .block {
+        border: 1px solid #999;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+    }
+
+    .past {
+        background-color: #333;
+        /*opacity: .7;*/
+    }
+
+    .past:before {
+        content: "🗨️";
+        /*content: "⭕";*/
+        /*content: "❌";*/
+    }
+
+    .now {
+        background-color: orange;
+    }
+
+    .now:before {
+        content: "🔥";
+    }
+
+    .future {
+        background-color: green;
+    }
+
+    .future:before {
+        content: "🔥";
+    }
+
+    .ht:hover .tooltip {
+        display: block;
+    }
+
+    .tooltip {
+        display: none;
+        color: gray;
+        margin-left: 0;
+        margin-top: 50px;
+        position: absolute;
+    }
 
 </style>
 <body>
 <script type="text/javascript">
-function leadZero(v){
-    return (v+"").padStart(2, "0");
-}
-function formatTime(t) {
-    return leadZero(t.getHours())+":"+leadZero(t.getMinutes());
-}
-const begin = new Date(0,0,0,10);
-const end = new Date(0,0,0,19);
-const dayLength = end-begin;
-const nBlocks = 20;
-const blockLength = dayLength / nBlocks;
-var now = new Date();
-now.setYear(0);
-now.setMonth(0, 0);
-document.write("<div class=\"pre-block\">"+formatTime(begin)+"</div>");
-for (var i = 0; i < nBlocks; i++) {
-    var blockTime = new Date(begin.getTime() + i * blockLength);
-    var nextBlockTime = new Date(begin.getTime() + (i+1) * blockLength);
-    var c;
-    if (now < blockTime) {
-        c = "future";
-    } else {
-        if (now < nextBlockTime) {
-            c = "now";
-        } else {
-            c = "past"
-        }
+    function leadZero(v) {
+        return (v + "").padStart(2, "0");
     }
-    var tc = "<span class=\"tooltip\">"+formatTime(blockTime)+"</span>";
-    document.write("<div class=\"block "+c+" ht\">"+tc+"</div>");
-}
-document.write("<div class=\"post-block\">"+formatTime(end)+"</div>");
 
-setTimeout(function(){location.reload();},5000);
+    function formatTime(t) {
+        return leadZero(t.getHours()) + ":" + leadZero(t.getMinutes());
+    }
+
+    const begin = new Date(0, 0, 0, 10);
+    const end = new Date(0, 0, 0, 19);
+    const dayLength = end - begin;
+    const nBlocks = 20;
+    const blockLength = dayLength / nBlocks;
+    let now = new Date();
+    now.setYear(0);
+    now.setMonth(0, 0);
+    document.write("<div class=\"pre-block\">" + formatTime(begin) + "</div><div class=\"container\">");
+    for (let i = 0; i < nBlocks; i++) {
+        let blockTime = new Date(begin.getTime() + i * blockLength);
+        let nextBlockTime = new Date(begin.getTime() + (i + 1) * blockLength);
+        let c;
+        if (now < blockTime) {
+            c = "future";
+        } else {
+            if (now < nextBlockTime) {
+                c = "now";
+            } else {
+                c = "past"
+            }
+        }
+        let style = "";
+        let th = nBlocks * 0.7;
+        if (i >= nBlocks - th) {
+            let p = (i - (nBlocks - th)) / th;
+            let o = 1 - p * 0.8;
+            let fz = (1 - p * 0.8) * 40;
+            style = "opacity: " + o + "; font-size: " + fz + "px;";
+        }
+        let tc = "<span class=\"tooltip\">" + formatTime(blockTime) + "</span>";
+        document.write("<div class=\"block " + c + " ht\" style=\"" + style + "\">" + tc + "</div>");
+    }
+    document.write("</div><div class=\"post-block\">" + formatTime(end) + "</div>");
+
+    setTimeout(function () {
+        location.reload();
+    }, 5000);
 </script>
 </body>
 </html>
