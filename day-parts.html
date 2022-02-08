@@ -1,0 +1,85 @@
+<html>
+<style>
+.block, .pre-block, .post-block {
+    display: inline-block;
+}
+.block {
+    border: 1px solid #999;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+.past {
+    background-color: #333;
+    /*opacity: .7;*/
+}
+.past:after {
+    content: "🗨️";
+    /*content: "⭕";*/
+    /*content: "❌";*/
+}
+.now {
+    background-color: orange;
+}
+.now:after {
+    content: "🔥";
+}
+.future {
+    background-color: green;
+}
+.future:after {
+    content: "🔥";
+}
+
+.ht:hover .tooltip {
+  display:block;
+}
+
+.tooltip {
+  display: none;
+  color: gray;
+  margin-left: 0px;
+  margin-top: 32px;
+  position: absolute;
+}
+
+</style>
+<body>
+<script type="text/javascript">
+function leadZero(v){
+    return (v+"").padStart(2, "0");
+}
+function formatTime(t) {
+    return leadZero(t.getHours())+":"+leadZero(t.getMinutes());
+}
+const begin = new Date(0,0,0,10);
+const end = new Date(0,0,0,19);
+const dayLength = end-begin;
+const nBlocks = 20;
+const blockLength = dayLength / nBlocks;
+var now = new Date();
+now.setYear(0);
+now.setMonth(0, 0);
+document.write("<div class=\"pre-block\">"+formatTime(begin)+"</div>");
+for (var i = 0; i < nBlocks; i++) {
+    var blockTime = new Date(begin.getTime() + i * blockLength);
+    var nextBlockTime = new Date(begin.getTime() + (i+1) * blockLength);
+    var c;
+    if (now < blockTime) {
+        c = "future";
+    } else {
+        if (now < nextBlockTime) {
+            c = "now";
+        } else {
+            c = "past"
+        }
+    }
+    var tc = "<span class=\"tooltip\">"+formatTime(blockTime)+"</span>";
+    document.write("<div class=\"block "+c+" ht\">"+tc+"</div>");
+}
+document.write("<div class=\"post-block\">"+formatTime(end)+"</div>");
+
+setTimeout(function(){location.reload();},5000);
+</script>
+</body>
+</html>
